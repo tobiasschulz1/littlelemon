@@ -25,6 +25,7 @@ struct UserProfile: View {
                 self.presentation.wrappedValue.dismiss()
             }
             Spacer()
+            
         }
     }
 }
