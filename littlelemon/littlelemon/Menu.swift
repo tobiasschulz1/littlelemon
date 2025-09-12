@@ -10,20 +10,38 @@ import SwiftUI
 
 struct Menu: View {
     @Environment(\.managedObjectContext) private var viewContext
+    @State var searchText: String = ""
+    func buildSortDescriptors() -> [NSSortDescriptor] {
+        return [
+            NSSortDescriptor(
+                key: "title",
+                ascending: true,
+                selector: #selector(NSString.localizedStandardCompare)
+            )
+        ]
+    }
+    func buildPredicate() -> NSPredicate {
+        if searchText.isEmpty {
+            return NSPredicate(value: true)
+        } else {
+            return NSPredicate(format: "title CONTAINS[cd] %@", searchText)
+        }
+    }
     var body: some View {
         VStack {
             Text("Little Lemon")
             Text("Chicago")
             Text("This app lets user order their favorite food from a menu")
-            FetchedObjects(predicate: NSPredicate(value: true)) {
+            TextField("Search menu", text: $searchText)
+            FetchedObjects(predicate: buildPredicate(), sortDescriptors: buildSortDescriptors()) {
                 (dishes: [Dish]) in
                 List {
                     ForEach(dishes) { dish in
                         HStack {
                             Text("\(dish.title!) costs \(dish.price!).")
-                            AsyncImage(url: URL(string: dish.image!)){ image in
+                            AsyncImage(url: URL(string: dish.image!)) { image in
                                 image.image?.resizable()
-//                                image.image?.scaledToFit()
+                                //                                image.image?.scaledToFit()
                             }
                         }
                     }
