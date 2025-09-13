@@ -28,30 +28,37 @@ struct Menu: View {
         }
     }
     var body: some View {
-        VStack {
-            Text("Little Lemon")
-            Text("Chicago")
-            Text("This app lets user order their favorite food from a menu")
-            TextField("Search menu", text: $searchText)
-            FetchedObjects(predicate: buildPredicate(), sortDescriptors: buildSortDescriptors()) {
-                (dishes: [Dish]) in
-                List {
-                    ForEach(dishes) { dish in
-                        HStack {
-                            Text("\(dish.title!) costs \(dish.price!).")
-                            AsyncImage(url: URL(string: dish.image!)) { image in
-                                image.image?.resizable()
-                                //                                image.image?.scaledToFit()
+        ScrollView(.vertical){
+            VStack {
+                Header()
+                Hero(searchText: $searchText)
+                MenuBreakdown()
+                
+                FetchedObjects(
+                    predicate: buildPredicate(),
+                    sortDescriptors: buildSortDescriptors()
+                ) {
+                    (dishes: [Dish]) in
+                    List {
+                        ForEach(dishes) { dish in
+                            HStack {
+                                Text("\(dish.title!) costs \(dish.price!).")
+                                AsyncImage(url: URL(string: dish.image!)) { image in
+                                    image.image?.resizable()
+                                    //                                image.image?.scaledToFit()
+                                }
                             }
                         }
                     }
                 }
             }
+
+            .onAppear {
+                getMenuData()
+            }
+
         }
-        .onAppear {
-            getMenuData()
-        }
-    }
+            }
 
     func getMenuData() {
         PersistenceController.shared.clear()
