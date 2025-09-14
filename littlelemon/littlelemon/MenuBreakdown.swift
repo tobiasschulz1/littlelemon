@@ -23,7 +23,9 @@ struct MenuBreakdown: View {
                     Spacer()
                         .frame(width: 20)
                     ForEach(menuCategories, id: \.self) { category in
-                        Text(category)
+                        Button(category){
+                            
+                        }
                             .fontWeight(.bold)
                             .foregroundColor(Color(red: 73/255, green: 94/255, blue: 87/255))
                             .padding(8)

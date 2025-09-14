@@ -28,37 +28,74 @@ struct Menu: View {
         }
     }
     var body: some View {
-        ScrollView(.vertical){
-            VStack {
-                Header()
-                Hero(searchText: $searchText)
-                MenuBreakdown()
-                
-                FetchedObjects(
-                    predicate: buildPredicate(),
-                    sortDescriptors: buildSortDescriptors()
-                ) {
-                    (dishes: [Dish]) in
-                    List {
-                        ForEach(dishes) { dish in
+        //        ScrollView(.vertical){
+        VStack {
+            Header()
+            Hero(searchText: $searchText)
+            MenuBreakdown()
+
+            FetchedObjects(
+                predicate: buildPredicate(),
+                sortDescriptors: buildSortDescriptors()
+            ) {
+                (dishes: [Dish]) in
+                List {
+                    ForEach(dishes) { dish in
+                        VStack(spacing: 2) {
                             HStack {
-                                Text("\(dish.title!) costs \(dish.price!).")
-                                AsyncImage(url: URL(string: dish.image!)) { image in
-                                    image.image?.resizable()
-                                    //                                image.image?.scaledToFit()
+                                Text(dish.title!)
+                                    //                                .foregroundColor(Color(red: <#T##Double#>, green: <#T##Double#>, blue: <#T##Double#>))
+                                    .font(.system(size: 20, weight: .bold))
+                                Spacer()
+                            }
+                            HStack {
+                                VStack {
+                                    HStack{
+                                        Text(dish.itemDescription!)
+                                        Spacer()
+                                    }
+                                    .padding(.bottom, 5)
+                                    HStack{
+                                        Text("$\(dish.price!)")
+                                            .font(.system(size: 20, weight: .bold))
+                                            .foregroundColor(Color(red: 73 / 255, green: 94 / 255, blue: 87 / 255))
+                                        Spacer()
+                                    }
                                 }
+                                //                                Text("\(dish.title!) costs \(dish.price!).")
+                                Spacer()
+                                Rectangle()
+                                    .aspectRatio(1, contentMode: .fit)
+                                    .frame(maxWidth: 100, maxHeight: 100)
+                                    .overlay(
+                                        AsyncImage(
+                                            url: URL(string: dish.image!)
+                                        ) {
+                                            image in
+                                            image.image?
+                                                .resizable()
+                                                .scaledToFill()
+                                            //                                    .frame(maxWidth: 100, maxHeight: 100)
+                                            //                                    .clipped()
+                                            //                                    .aspectRatio(1, contentMode: .fit)
+                                        }
+                                    )
+                                    .clipShape(Rectangle())
                             }
                         }
+
                     }
                 }
+                .listStyle(.plain)
             }
-
-            .onAppear {
-                getMenuData()
-            }
-
         }
-            }
+
+        .onAppear {
+            getMenuData()
+        }
+
+        //        }
+    }
 
     func getMenuData() {
         PersistenceController.shared.clear()
@@ -95,6 +132,8 @@ struct Menu: View {
                             dish.title = menuItem.title
                             dish.price = menuItem.price
                             dish.image = menuItem.image
+                            dish.itemDescription = menuItem.itemDescription
+                            dish.category = menuItem.category
                         }
                         do {
                             try viewContext.save()
