@@ -8,29 +8,62 @@
 import SwiftUI
 
 struct MenuBreakdown: View {
-    var menuCategories: [String] = ["Starters", "Mains", "Desserts", "Drinks"]
+    @EnvironmentObject var viewModel: MenuViewModel
+    let menuCategories: [String] = ["Starters", "Mains", "Desserts", "Drinks"]
+
     var body: some View {
-        VStack{
-            HStack{
+        VStack {
+            Spacer()
+                .frame(height: 20)
+            HStack {
                 Spacer()
                     .frame(width: 20)
-                Text("ORDER FOR DELIVERY")
+                Text("ORDER FOR DELIVERY!")
+                    .font(.system(size: 20, weight: .bold))
                 Spacer()
             }
-            
-            ScrollView(.horizontal){
-                HStack{
+
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack {
                     Spacer()
                         .frame(width: 20)
                     ForEach(menuCategories, id: \.self) { category in
-                        Button(category){
-                            
+                        Button(category) {
+                            if !(viewModel.selectedCategory == category) {
+                                viewModel.selectedCategory = category
+                            } else {
+                                viewModel.resetFilter()
+                            }
                         }
-                            .fontWeight(.bold)
-                            .foregroundColor(Color(red: 73/255, green: 94/255, blue: 87/255))
-                            .padding(8)
-                            .background(Color(red: 217/255, green: 217/255, blue: 217/255))
-                            .cornerRadius(10)
+                        .fontWeight(.bold)
+                        .foregroundColor(
+                            viewModel.selectedCategory == category
+                                ? Color(
+                                    red: 217 / 255,
+                                    green: 217 / 255,
+                                    blue: 217 / 255
+                                )
+                                : Color(
+                                    red: 73 / 255,
+                                    green: 94 / 255,
+                                    blue: 87 / 255
+                                )
+                        )
+                        .padding(8)
+                        .background(
+                            viewModel.selectedCategory == category
+                                ? Color(
+                                    red: 73 / 255,
+                                    green: 94 / 255,
+                                    blue: 87 / 255
+                                )
+                                : Color(
+                                    red: 217 / 255,
+                                    green: 217 / 255,
+                                    blue: 217 / 255
+                                )
+                        )
+                        .cornerRadius(10)
                         Spacer()
                             .frame(width: 40)
                     }

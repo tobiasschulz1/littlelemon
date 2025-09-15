@@ -9,11 +9,13 @@ import SwiftUI
 import CoreData
 
 struct Home: View {
+    @StateObject var viewModel = MenuViewModel()
     let persistenceController = PersistenceController.shared
     var body: some View {
         TabView {
-            Menu()
+            Menu(viewModel: viewModel)
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
+                .environmentObject(viewModel)
                 .tabItem {
                     Label("Menu", systemImage: "list.dash")
                 }
@@ -29,3 +31,4 @@ struct Home: View {
 #Preview {
     Home()
 }
+

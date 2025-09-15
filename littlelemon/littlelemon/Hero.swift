@@ -63,6 +63,8 @@ struct Hero: View {
                             .cornerRadius(20)
                         Spacer()
                     }
+                    Spacer()
+                        .frame(height: 5)
                 }
             }
             .padding(10)
@@ -70,6 +72,7 @@ struct Hero: View {
                 Color(red: 73 / 255, green: 94 / 255, blue: 87 / 255)
             )
         }
+        .frame(minHeight: 350)
     }
 }
 

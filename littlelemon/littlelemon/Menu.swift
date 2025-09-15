@@ -11,6 +11,8 @@ import SwiftUI
 struct Menu: View {
     @Environment(\.managedObjectContext) private var viewContext
     @State var searchText: String = ""
+    @ObservedObject var viewModel: MenuViewModel
+    //    @Binding var menuFilter: String
     func buildSortDescriptors() -> [NSSortDescriptor] {
         return [
             NSSortDescriptor(
@@ -20,22 +22,40 @@ struct Menu: View {
             )
         ]
     }
-    func buildPredicate() -> NSPredicate {
+    func buildSearchPredicate() -> NSPredicate {
         if searchText.isEmpty {
             return NSPredicate(value: true)
         } else {
             return NSPredicate(format: "title CONTAINS[cd] %@", searchText)
         }
     }
+    func buildMenuFilterPredicate() -> NSPredicate {
+        if viewModel.selectedCategory.isEmpty {
+            return NSPredicate(value: true)
+        } else {
+            return NSPredicate(
+                format: "category ==[c] %@",
+                viewModel.selectedCategory
+            )
+        }
+    }
+    var finalMenuFilterPredicate: NSPredicate {
+        NSCompoundPredicate(
+            type: .and,
+            subpredicates: [buildMenuFilterPredicate(), buildSearchPredicate()]
+        )
+    }
+
     var body: some View {
         //        ScrollView(.vertical){
         VStack {
             Header()
             Hero(searchText: $searchText)
             MenuBreakdown()
+                .environmentObject(viewModel)
 
             FetchedObjects(
-                predicate: buildPredicate(),
+                predicate: finalMenuFilterPredicate,
                 sortDescriptors: buildSortDescriptors()
             ) {
                 (dishes: [Dish]) in
@@ -44,25 +64,31 @@ struct Menu: View {
                         VStack(spacing: 2) {
                             HStack {
                                 Text(dish.title!)
-                                    //                                .foregroundColor(Color(red: <#T##Double#>, green: <#T##Double#>, blue: <#T##Double#>))
                                     .font(.system(size: 20, weight: .bold))
                                 Spacer()
                             }
                             HStack {
                                 VStack {
-                                    HStack{
+                                    HStack {
                                         Text(dish.itemDescription!)
                                         Spacer()
                                     }
                                     .padding(.bottom, 5)
-                                    HStack{
+                                    HStack {
                                         Text("$\(dish.price!)")
-                                            .font(.system(size: 20, weight: .bold))
-                                            .foregroundColor(Color(red: 73 / 255, green: 94 / 255, blue: 87 / 255))
+                                            .font(
+                                                .system(size: 20, weight: .bold)
+                                            )
+                                            .foregroundColor(
+                                                Color(
+                                                    red: 73 / 255,
+                                                    green: 94 / 255,
+                                                    blue: 87 / 255
+                                                )
+                                            )
                                         Spacer()
                                     }
                                 }
-                                //                                Text("\(dish.title!) costs \(dish.price!).")
                                 Spacer()
                                 Rectangle()
                                     .aspectRatio(1, contentMode: .fit)
@@ -75,9 +101,6 @@ struct Menu: View {
                                             image.image?
                                                 .resizable()
                                                 .scaledToFill()
-                                            //                                    .frame(maxWidth: 100, maxHeight: 100)
-                                            //                                    .clipped()
-                                            //                                    .aspectRatio(1, contentMode: .fit)
                                         }
                                     )
                                     .clipShape(Rectangle())
@@ -93,8 +116,6 @@ struct Menu: View {
         .onAppear {
             getMenuData()
         }
-
-        //        }
     }
 
     func getMenuData() {
@@ -154,5 +175,5 @@ struct Menu: View {
 }
 
 #Preview {
-    Menu()
+    Menu(viewModel: MenuViewModel())
 }
