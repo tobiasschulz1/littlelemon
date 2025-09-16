@@ -12,10 +12,12 @@ struct Header: View {
         ZStack {
             HStack {
                 Spacer()
-                Image("Profile")
-                    .resizable()
-                    .scaledToFit()
-                    .padding(.trailing, 20)
+                NavigationLink(destination: UserProfile()) {
+                    Image("Profile")
+                        .resizable()
+                        .scaledToFit()
+                        .padding(.trailing, 20)
+                }
             }
             Image("Logo")
                 .resizable()

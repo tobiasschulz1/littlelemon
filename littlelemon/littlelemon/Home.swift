@@ -12,19 +12,19 @@ struct Home: View {
     @StateObject var viewModel = MenuViewModel()
     let persistenceController = PersistenceController.shared
     var body: some View {
-        TabView {
+//        NavigationStack {
             Menu(viewModel: viewModel)
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
                 .environmentObject(viewModel)
                 .tabItem {
                     Label("Menu", systemImage: "list.dash")
                 }
-            UserProfile()
-                .tabItem {
-                    Label("Profile", systemImage: "square.and.pencil")
-                }
-        }
-        .navigationBarBackButtonHidden()
+//            UserProfile()
+//                .tabItem {
+//                    Label("Profile", systemImage: "square.and.pencil")
+//                }
+//        }
+//        .navigationBarBackButtonHidden()
     }
 }
 

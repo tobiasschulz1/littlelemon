@@ -17,6 +17,10 @@ struct Onboarding: View {
     @State var lastName: String = ""
     @State var email: String = ""
     @State var isLoggedIn = false
+    
+    @AppStorage("userFirstName") var userFirstName: String = ""
+    @AppStorage("userLastName") var userLastName: String = ""
+    @AppStorage("userEmail") var userEmail: String = ""
 
     var body: some View {
         NavigationStack {
@@ -29,14 +33,14 @@ struct Onboarding: View {
                 Button("Register") {
                     if !firstName.isEmpty, !lastName.isEmpty, !email.isEmpty, isValidEmail(email) {
                         UserDefaults.standard.set(
-                            testUserFirstName,
+                            firstName,
                             forKey: "firstName"
                         )
                         UserDefaults.standard.set(
-                            testUserLastName,
+                            lastName,
                             forKey: "lastName"
                         )
-                        UserDefaults.standard.set(testUserEmail, forKey: "email")
+                        UserDefaults.standard.set(email, forKey: "email")
                         isLoggedIn = true
                         UserDefaults.standard.set(true, forKey: testUserIsLoggedIn)
                     }
@@ -51,6 +55,7 @@ struct Onboarding: View {
                 }
             }
         }
+        .navigationBarBackButtonHidden(true)
     }
 }
 
