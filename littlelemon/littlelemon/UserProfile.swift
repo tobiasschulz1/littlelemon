@@ -105,6 +105,8 @@ struct UserProfile: View {
                     .padding(.bottom, 8)
 
                     TextField(email, text: $email)
+                        .textInputAutocapitalization(.never)
+                        .keyboardType(.emailAddress)
                         .padding(.leading)
                         .frame(maxWidth: .infinity)
                         .frame(height: 40)

@@ -24,12 +24,128 @@ struct Onboarding: View {
 
     var body: some View {
         NavigationStack {
+            VStack{
+                HStack{
+                    Spacer()
+                    Image("Logo")
+                        .resizable()
+                        .scaledToFit()
+                    Spacer()
+                }
+                .frame(height: 60)
+                .padding(.bottom, 10)
+            }
             VStack {
+                ZStack {
+                    VStack(spacing: 0) {
+                        HStack {
+                            Text("Little Lemon")
+                                .foregroundColor(
+                                    Color(
+                                        red: 244 / 255,
+                                        green: 206 / 255,
+                                        blue: 20 / 255
+                                    )
+                                )
+                                .font(.system(size: 48, weight: .bold))
+                            Spacer()
+                        }
+                        HStack {
+                            VStack {
+                                HStack {
+                                    Text("Chicago")
+                                        .foregroundColor(.white)
+                                        .font(.system(size: 40))
+                                    Spacer()
+                                }
+                                Spacer()
+                                    .frame(height: 20)
+                                Text(
+                                    "We are a family owned Mediterranean restaurant, focused on traditional recipes served with a modern twist."
+                                )
+                                .foregroundColor(.white)
+
+                            }
+                            Image("Hero image")
+                                .resizable()
+                                .scaledToFit()
+                                .cornerRadius(15)
+                                .padding(10)
+                        }
+                    }
+                }
+                .padding(10)
+                .padding(.bottom, 20)
+                .background(
+                    Color(red: 73 / 255, green: 94 / 255, blue: 87 / 255)
+                )
+            }
+//            .frame(minHeight: 350)
+            .padding(.bottom, 30)
+            VStack {
+                HStack {
+                    Text("First name")
+                        .padding(.horizontal, 10)
+                    Spacer()
+                }
+                .padding(.bottom, 8)
                 TextField("First Name", text: $firstName)
+                    .padding(.leading)
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 40)
+                    .border(
+                        Color(
+                            red: 217 / 255,
+                            green: 217 / 255,
+                            blue: 217 / 255
+                        )
+                    )
+                    .cornerRadius(8)
+                    .padding(.horizontal, 10)
+                    .padding(.bottom, 16)
+                HStack {
+                    Text("Last name")
+                        .padding(.horizontal, 10)
+                    Spacer()
+                }
+                .padding(.bottom, 8)
                 TextField("Last Name", text: $lastName)
+                    .padding(.leading)
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 40)
+                    .border(
+                        Color(
+                            red: 217 / 255,
+                            green: 217 / 255,
+                            blue: 217 / 255
+                        )
+                    )
+                    .cornerRadius(8)
+                    .padding(.horizontal, 10)
+                    .padding(.bottom, 16)
+                HStack {
+                    Text("Email")
+                        .padding(.horizontal, 10)
+                    Spacer()
+                }
+                .padding(.bottom, 8)
                 TextField("Email", text: $email)
                     .textInputAutocapitalization(.never)
                     .keyboardType(.emailAddress)
+                    .padding(.leading)
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 40)
+                    .border(
+                        Color(
+                            red: 217 / 255,
+                            green: 217 / 255,
+                            blue: 217 / 255
+                        )
+                    )
+                    .cornerRadius(8)
+                    .padding(.horizontal, 10)
+                    .padding(.bottom, 16)
+                Spacer()
                 Button("Register") {
                     if !firstName.isEmpty, !lastName.isEmpty, !email.isEmpty, isValidEmail(email) {
                         UserDefaults.standard.set(
@@ -45,6 +161,19 @@ struct Onboarding: View {
                         UserDefaults.standard.set(true, forKey: testUserIsLoggedIn)
                     }
                 }
+                .foregroundColor(.black)
+                .font(.system(size: 18, weight: .semibold))
+                .frame(maxWidth: .infinity)
+                .frame(height: 40)
+                .background(
+                    Color(red: 244 / 255, green: 206 / 255, blue: 20 / 255)
+                )
+                .border(
+                    Color(red: 238 / 255, green: 153 / 255, blue: 114 / 255)
+                )
+                .cornerRadius(8)
+                .padding(.horizontal, 40)
+                .padding(.bottom, 16)
             }
             .navigationDestination(isPresented: $isLoggedIn) {
                 Home()
